@@ -1,0 +1,12 @@
+package test.webtrekk.backend;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class WebtrekkApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(WebtrekkApplication.class, args);
+	}
+}
