@@ -2,8 +2,9 @@ package test.webtrekk.backend;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -17,11 +18,9 @@ import test.webtrekk.backend.auth.JWTAuthentication;
 @EnableWebSecurity
 public class HomeController {
 
-    @PreAuthorize("authenticated")
     @RequestMapping(value = "/home", method = { RequestMethod.GET, RequestMethod.POST }, produces = "application/json")
-    public ResponseEntity<?> home(@RequestHeader(value=JWTAuthentication.X_AUTH_HEADER) String x_auth_header) {
-        if (x_auth_header.isEmpty())
-            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
-        return new ResponseEntity<>("Hello Jon Doe",HttpStatus.OK);
+    public ResponseEntity<?> home() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return new ResponseEntity<String>("Hello "+ authentication.getName(),HttpStatus.OK);
     }
 }

@@ -17,7 +17,9 @@ public class JWTAuthentication implements Authentication {
 
     public static final String ROLES_CLAIM_NAME = "roles";
 
-    public static final String X_AUTH_HEADER = "X-AuthToken";
+    public static final String X_AUTH_TOKEN_HEADER = "X-AuthToken";
+    public static final String AUTHORIZATION_HEADER = "Authorization";
+
     protected String tokenString;
     protected Claims tokenClaims;
     protected List<GrantedAuthority> authorities;

@@ -19,10 +19,13 @@
 		</layout>
 	</appender>
 
-	<category name="org.springframework.boot">
+	<category name="org.springframework.test">
 		<priority value="debug"/>
 	</category>
 
+	<category name="org.springframework.web">
+		<priority value="debug"/>
+	</category>
 
 	<category name="org.springframework.security.config">
 		<priority value="debug"/>

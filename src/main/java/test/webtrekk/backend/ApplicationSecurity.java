@@ -34,26 +34,28 @@ public class ApplicationSecurity extends WebSecurityConfigurerAdapter implements
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()               // http://stackoverflow.com/questions/19468209/spring-security-403-error
-                .httpBasic()
-//                    .antMatcher("/home").authorizeRequests().anyRequest().authenticated()
-//                .and()
+                .httpBasic()                    // use basic auth to auhenticate (Authorization header)
                 .and()
                 .authorizeRequests()
+                    .antMatchers(HttpMethod.POST, "/home").authenticated()
+                    .antMatchers(HttpMethod.GET, "/home").authenticated()
                     .antMatchers(HttpMethod.POST, "/login").hasRole(userRole)
                     .antMatchers(HttpMethod.GET, "/login").hasRole(userRole)
         ;
-//        http.addFilterBefore(new SpringSecurityJWTAuthenticationFilter(super.authenticationManagerBean()),
-//                             BasicAuthenticationFilter.class);
-//        http.addFilterAfter(new SpringSecurityAddJWTTokenFilter(jwtAuthenticationProvider()),
-//                            BasicAuthenticationFilter.class);
+        http.addFilterBefore(new SpringSecurityJWTAuthenticationFilter(super.authenticationManagerBean()),
+                             BasicAuthenticationFilter.class);
+        http.addFilterAfter(new SpringSecurityAddJWTTokenFilter(jwtAuthenticationProvider()),
+                            BasicAuthenticationFilter.class);
     }
 
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth //.authenticationProvider(jwtAuthenticationProvider())
+        auth    .authenticationProvider(jwtAuthenticationProvider())        // configure our specific authentication provider for JWT
                 .inMemoryAuthentication()
-                .withUser(testUser).password(testPassword).roles(userRole).and()
-                .withUser(testUser2).password(testPassword2).roles(userRole);
+                .withUser(testUser).password(testPassword).roles(userRole)
+//                .and()
+//                .withUser(testUser2).password(testPassword2).roles(userRole)
+        ;
     }
 
     @Bean

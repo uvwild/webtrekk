@@ -5,13 +5,13 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.stereotype.Component;
 
 import java.time.Instant;
 import java.util.Date;
 
 /**
- * The provider to create the JWT token
- *
+ * The provider to create and verify the JWT token
  */
 public class JWTAuthenticationProvider implements AuthenticationProvider {
 

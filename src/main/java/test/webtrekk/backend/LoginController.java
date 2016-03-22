@@ -1,5 +1,7 @@
 package test.webtrekk.backend;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,12 +23,14 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 public class LoginController {
 
+    protected final Log logger = LogFactory.getLog(getClass());
+
     @RequestMapping(value = "/login", method = { RequestMethod.POST, RequestMethod.GET }, produces = "application/json")
     public ResponseEntity<?> doLogin(HttpServletRequest httpServletRequest) {
-//        RestTemplate restTemplate = new RestTemplate();
-//        JWTAuthentication jwtAuthentication = restTemplate.getForObject("//login/jwt", JWTAuthentication.class);
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        System.err.println(authentication);
+        if (logger.isDebugEnabled()) {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            logger.debug(authentication);
+        }
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

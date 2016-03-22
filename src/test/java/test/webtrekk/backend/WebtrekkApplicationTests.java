@@ -40,13 +40,13 @@ abstract public class WebtrekkApplicationTests implements UserList {
                 .build();
     }
 
-    public String inValidJWTtestToken() {
-        return "blubberblubber.laberlaber.glibberglibber";
+    public String getInvalidJWTAuthorizationHeader() {
+        return "Bearer " + "blubberblubber.laberlaber.glibberglibber";
     }
 
-    public String computeValidJWTtestToken() {
+    public String getValidJWTAuthorizationHeader() {
         String jwtToken = applicationSecurity.jwtAuthenticationProvider().createJWTToken(testUser);
-        return jwtToken;
+        return "Bearer " + jwtToken;
     }
 
 }
