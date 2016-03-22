@@ -23,6 +23,9 @@ public class SpringSecurityAddJWTTokenFilter extends GenericFilterBean {
         this.jwtAuthenticationProvider = jwtAuthenticationProvider;
     }
 
+    /**
+     * here we add the JWT token as a response header
+     */
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest)request;
         HttpServletResponse httpResponse = (HttpServletResponse)response;

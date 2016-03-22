@@ -18,10 +18,10 @@ import test.webtrekk.backend.auth.JWTAuthentication;
 public class HomeController {
 
     @PreAuthorize("authenticated")
-    @RequestMapping(value = "/home", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/home", method = { RequestMethod.GET, RequestMethod.POST }, produces = "application/json")
     public ResponseEntity<?> home(@RequestHeader(value=JWTAuthentication.X_AUTH_HEADER) String x_auth_header) {
         if (x_auth_header.isEmpty())
             return new ResponseEntity(HttpStatus.UNAUTHORIZED);
-        return new ResponseEntity("Hello Jon Doe",HttpStatus.OK);
+        return new ResponseEntity<>("Hello Jon Doe",HttpStatus.OK);
     }
 }

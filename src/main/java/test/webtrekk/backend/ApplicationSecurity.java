@@ -5,42 +5,55 @@ import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.servlet.configuration.EnableWebMvcSecurity;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import test.webtrekk.backend.auth.JWTAuthenticationProvider;
 import test.webtrekk.backend.auth.SpringSecurityAddJWTTokenFilter;
 import test.webtrekk.backend.auth.SpringSecurityJWTAuthenticationFilter;
+import test.webtrekk.backend.auth.UserList;
 
 /**
  * Created by uv on 21.03.2016 for webtrekk
  */
 @Configuration
-@Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
-public class ApplicationSecurity extends WebSecurityConfigurerAdapter {
+@EnableWebSecurity  // @EnableGlobalMethodSecurity
+@Order(SecurityProperties.BASIC_AUTH_ORDER)
+//@Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
+public class ApplicationSecurity extends WebSecurityConfigurerAdapter implements UserList {
 
     @Value("${JWT_SECRET:defaultSecret}")
     protected String secret;
 
-    @Override
+    @Override  // this overrides default config in super
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .csrf().disable()
+                .csrf().disable()               // http://stackoverflow.com/questions/19468209/spring-security-403-error
+                .httpBasic()
+//                    .antMatcher("/home").authorizeRequests().anyRequest().authenticated()
+//                .and()
+                .and()
                 .authorizeRequests()
-                .anyRequest().authenticated().and()
-                .httpBasic().and()
-                .csrf().disable();
-        http.addFilterBefore(new SpringSecurityJWTAuthenticationFilter(super.authenticationManagerBean()),
-                             BasicAuthenticationFilter.class);
-        http.addFilterAfter(new SpringSecurityAddJWTTokenFilter(jwtAuthenticationProvider()),
-                            BasicAuthenticationFilter.class);
+                    .antMatchers(HttpMethod.POST, "/login").hasRole(userRole)
+                    .antMatchers(HttpMethod.GET, "/login").hasRole(userRole)
+        ;
+//        http.addFilterBefore(new SpringSecurityJWTAuthenticationFilter(super.authenticationManagerBean()),
+//                             BasicAuthenticationFilter.class);
+//        http.addFilterAfter(new SpringSecurityAddJWTTokenFilter(jwtAuthenticationProvider()),
+//                            BasicAuthenticationFilter.class);
     }
 
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(jwtAuthenticationProvider())
-                .inMemoryAuthentication().withUser("user").password("user").roles("USER");
+        auth //.authenticationProvider(jwtAuthenticationProvider())
+                .inMemoryAuthentication()
+                .withUser(testUser).password(testPassword).roles(userRole).and()
+                .withUser(testUser2).password(testPassword2).roles(userRole);
     }
 
     @Bean

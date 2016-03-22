@@ -14,12 +14,16 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import test.webtrekk.backend.auth.JWTAuthentication;
+import test.webtrekk.backend.auth.UserList;
 
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = { WebtrekkApplication.class, ApplicationSecurity.class })
-abstract public class WebtrekkApplicationTests {
+abstract public class WebtrekkApplicationTests implements UserList {
+
+    @Autowired
+    private ApplicationSecurity applicationSecurity;
 
     @Autowired
     private FilterChainProxy springSecurityFilterChain;
@@ -37,11 +41,12 @@ abstract public class WebtrekkApplicationTests {
     }
 
     public String inValidJWTtestToken() {
-        return "12345";
+        return "blubberblubber.laberlaber.glibberglibber";
     }
 
     public String computeValidJWTtestToken() {
-        return "TBD";
+        String jwtToken = applicationSecurity.jwtAuthenticationProvider().createJWTToken(testUser);
+        return jwtToken;
     }
 
 }

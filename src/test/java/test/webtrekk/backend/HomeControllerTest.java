@@ -1,22 +1,14 @@
 package test.webtrekk.backend;
 
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.web.FilterChainProxy;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
+import org.springframework.test.web.servlet.MvcResult;
 import test.webtrekk.backend.auth.JWTAuthentication;
 
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.*;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.junit.Assert.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * Created by uv on 21.03.2016 for webtrekk
@@ -26,20 +18,21 @@ public class HomeControllerTest extends WebtrekkApplicationTests {
 
     @Test
     public void testNoJWT() throws Exception {
-        mvc.perform(get("/home"))
+        mvc.perform(get("/home").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
     public void testWrongJWT() throws Exception {
-        mvc.perform(get("/home").header(JWTAuthentication.X_AUTH_HEADER, inValidJWTtestToken()))
+        mvc.perform(get("/home").header(JWTAuthentication.X_AUTH_HEADER, inValidJWTtestToken()).accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
     public void testJohnDoeJWT() throws Exception {
-        mvc.perform(get("/home").header(JWTAuthentication.X_AUTH_HEADER, computeValidJWTtestToken()))
-                .andExpect(status().is2xxSuccessful());
+        MvcResult result = mvc.perform(get("/home").header(JWTAuthentication.X_AUTH_HEADER, computeValidJWTtestToken()).accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().is2xxSuccessful()).andReturn();
+        // todo check result
     }
 
 }
