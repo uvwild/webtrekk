@@ -8,7 +8,7 @@ Write the backend for a tiny web application. The requirements are:
 * When a logged-in user is redirected to the home page, a request is sent to the backend URL path "/home". The backend answers using the user's full name 
 provided by the JWT process. 
 
-![diagram](file:///C:/home/uv/IdeaProjects/webtrekk/diagram.jpg)
+![diagram](diagram.jpg)
 
 ##Preparation
 Explore the basic concept of (JSON Web Token) and (component testing how to)
@@ -32,7 +32,6 @@ Use the frameworks, tools and libraries of your choice (e.g. JUnit, Spring, Tomc
 Provide the code and build scripts / receipt as well as the compiled code (if applicable). 
 If possible provide a Docker container or Vagrant VM running the component.
 
-
 ----
 
 #Solution
@@ -44,12 +43,18 @@ This has been implemented using spring security. This means that the controller 
 A JWT Authentication type and its related provider class have been implemented to be able to use the JWT as an authentication method.
 
 2 Filters have been implemented:
- - one to add the JWT to the response upon login
- - one to feed a passed JWT Bearer authentication header into the spring security
+
+* the SpringSecurityAddJWTTokenFilter to add the JWT to the http response upon login
+* the SpringSecurityJWTAuthenticationFilter to feed a passed JWT Bearer authentication header into the spring security
  
  Most of the magic is the configuration of the HttpSecurity in the ApplicationSecurity @Configuration class. Here we configured the credentials for johndoe 
  for basic http authentication and configured access security for the rest endpoints as well as the filters. 
 
 ## Issues
+
 The login service has not been modeled properly as it was supposed to be mocked anyway. 
 It would require an additional authentication provider for basic http auth.
+
+A sample implementation can be found here <http://www.baeldung.com/2012/12/20/authentication-against-a-restful-service/>
+
+
