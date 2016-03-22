@@ -51,6 +51,8 @@ public class ApplicationSecurity extends WebSecurityConfigurerAdapter implements
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth    .authenticationProvider(jwtAuthenticationProvider())        // configure our specific authentication provider for JWT
+
+                // TODO replace simpleauthentication here with the service
                 .inMemoryAuthentication()
                 .withUser(testUser).password(testPassword).roles(userRole)
 //                .and()

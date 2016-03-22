@@ -52,9 +52,11 @@ A JWT Authentication type and its related provider class have been implemented t
 
 ## Issues
 
-The login service has not been modeled properly as it was supposed to be mocked anyway. 
-It would require an additional authentication provider for basic http auth.
+The login service has not been modeled properly in the first approach. 
+It would require an additional authentication provider which verifies basic http auth against the login service
 
-A sample implementation can be found here <http://www.baeldung.com/2012/12/20/authentication-against-a-restful-service/>
+A textbook implementation explaining this properly can be found here <http://www.baeldung.com/2012/12/20/authentication-against-a-restful-service/>
+
+I am tempted to simply copy the code here from   <https://github.com/eugenp/REST-With-Spring> , however, this does not make a lot of sense.
 
 
